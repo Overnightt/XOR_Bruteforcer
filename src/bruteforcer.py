@@ -1,3 +1,4 @@
+from itertools import product
 
 #XOR data with a repeating key.
 def XOR_bytes(data: bytes,key: bytes):
@@ -26,3 +27,15 @@ def score_txt(data: bytes):
         if 32 <= data[i] <= 126:
             score += 1
     return score
+
+#generates all possible keys
+def generate_keys(know: dict, unknown: list, key_length: int):
+    possible_keys=[]
+    for combination in product(range(256), repeat=len(unknown)):
+        key = [0]*key_length
+        for position, value in know.items():
+            key[position] = value
+        for i, position in enumerate(unknown):
+            key[position] = combination[i]
+        possible_keys.append(bytes(key))
+    return possible_keys
