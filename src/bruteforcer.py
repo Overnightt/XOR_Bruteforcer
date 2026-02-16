@@ -29,13 +29,24 @@ def score_txt(data: bytes):
     return score
 
 #generates all possible keys
-def generate_keys(know: dict, unknown: list, key_length: int):
+def generate_keys(known: dict, unknown: list, key_length: int):
     possible_keys=[]
     for combination in product(range(256), repeat=len(unknown)):
         key = [0]*key_length
-        for position, value in know.items():
+        for position, value in known.items():
             key[position] = value
         for i, position in enumerate(unknown):
             key[position] = combination[i]
         possible_keys.append(bytes(key))
     return possible_keys
+
+#The main bruteforcer function
+def bruteforcer(encrypted_data: bytes, known: dict, unknown:list, key_length: int, n_solutions: int=3):
+    solutions = []
+    possible_keys = generate_keys(known, unknown, key_length)
+    for key in possible_keys:
+        decrypted_data = XOR_bytes(encrypted_data, key)
+        score = score_txt(decrypted_data) 
+        solutions.append((key, decrypted_data, score))
+    solutions.sort(key=lambda x: x[2], reverse = True)
+    return solutions[:n_solutions]
