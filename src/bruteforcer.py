@@ -24,8 +24,16 @@ def parse_key(key:str):
 def score_txt(data: bytes):
     score = 0
     for i in range (len(data)):
-        if 32 <= data[i] <= 126:
+        if 97 <= data[i] <= 122:  
+            score += 2
+        elif 65 <= data[i] <= 90:
+            score += 2
+        elif data[i] == 32: 
+            score += 2
+        elif 32 <= data[i] <= 126:
             score += 1
+        else:
+            score -= 1
     return score
 
 #generates all possible keys
@@ -48,5 +56,8 @@ def bruteforcer(encrypted_data: bytes, known: dict, unknown:list, key_length: in
         decrypted_data = XOR_bytes(encrypted_data, key)
         score = score_txt(decrypted_data) 
         solutions.append((key, decrypted_data, score))
+        if key == b'AKC':
+            print(f"DEBUG AKC score: {score}")
+            print(f"DEBUG AKC decrypted: {decrypted_data}")
     solutions.sort(key=lambda x: x[2], reverse = True)
     return solutions[:n_solutions]

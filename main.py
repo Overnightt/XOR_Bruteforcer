@@ -10,6 +10,7 @@ def main():
     results = bruteforcer(encrypted_data, known, unknown, key_length)
     for i, (key, decrypted, score) in enumerate(results, 1):
         print(f"#{i}")
+        print(f" Score: {score}")
         print(f"  Key: {key.decode('latin-1', errors='ignore')}")
         print(f"  Decrypted: {decrypted.decode('utf-8', errors='ignore')}")
 
